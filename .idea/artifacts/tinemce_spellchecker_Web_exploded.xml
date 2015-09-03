@@ -1,0 +1,18 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="tinemce-spellchecker:Web exploded">
+    <output-path>$PROJECT_DIR$/classes/artifacts/tinemce_spellchecker_Web_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="tinemce-spellchecker/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="tinemce-spellchecker" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="jmyspell-core-1.0.0-beta-2" />
+        </element>
+      </element>
+      <element id="library" level="project" name="jmyspell-core-1.0.0-beta-2" />
+      <element id="library" level="project" name="servlet-api" />
+    </root>
+  </artifact>
+</component>

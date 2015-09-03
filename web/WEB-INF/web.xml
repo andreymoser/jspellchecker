@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <web-app version="2.4"
+         xmlns="http://java.sun.com/xml/ns/j2ee"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" >
+
+    <display-name>Spell Checker</display-name>
+
+    <!--Google service based SpellChecker-->
+    <servlet>
+        <description>A spell checking servlet that accepts JSON requests and processes them using Jazzy</description>
+        <servlet-name>google-spellchecker</servlet-name>
+        <servlet-class>org.tinymce.spellchecker.GoogleSpellChekerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>google-spellchecker</servlet-name>
+        <url-pattern>/google-spellchecker</url-pattern>
+    </servlet-mapping>
+
+    <!--Jazzy SpellChecker-->
+    <servlet>
+        <description>A spell checking servlet that accepts JSON requests and processes them using Jazzy</description>
+        <servlet-name>jazzy-spellchecker</servlet-name>
+        <servlet-class>org.tinymce.spellchecker.JazzySpellCheckerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>jazzy-spellchecker</servlet-name>
+        <url-pattern>/jazzy-spellchecker</url-pattern>
+    </servlet-mapping>
+
+    <!--JMySpell SpellChecker-->
+    <servlet>
+        <description>A spell checking servlet that accepts JSON requests and processes them using JMySpell</description>
+        <servlet-name>jmyspell-spellchecker</servlet-name>
+        <servlet-class>org.tinymce.spellchecker.JMySpellCheckerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>jmyspell-spellchecker</servlet-name>
+        <url-pattern>/jmyspell-spellchecker</url-pattern>
+    </servlet-mapping>
+
+    <!--Lucene SpellChecker-->
+    <servlet>
+        <description>A spell checking servlet that accepts JSON requests and processes them using Lucene Spellchecker</description>
+        <servlet-name>lucene-spellchecker</servlet-name>
+        <servlet-class>org.tinymce.spellchecker.LuceneSpellCheckerServlet</servlet-class>
+        <init-param>
+            <param-name>max_memory_usage</param-name>
+            <param-value>128</param-value>
+        </init-param>
+        <init-param>
+            <param-name>preloadedLanguages</param-name>
+            <param-value>en-us</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>lucene-spellchecker</servlet-name>
+        <url-pattern>/lucene-spellchecker</url-pattern>
+    </servlet-mapping>
+</web-app>

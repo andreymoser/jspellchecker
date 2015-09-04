@@ -10,7 +10,7 @@ tinymce.init({
     selector: "textarea",
     plugins: "spellchecker",
     spellchecker_languages : "+English=en-us",
-    spellchecker_wordchar_pattern: /[^\W]+/g,
+    spellchecker_wordchar_pattern: /[^\s,\.]+/g,
     spellchecker_callback: function(method, text, success, failure) {
         tinymce.util.JSONRequest.sendRPC({
             url: "http://localhost:8080/jspellchecker-servlet/jazzy-spellchecker",
@@ -32,9 +32,9 @@ tinymce.init({
 ```
 
 Special thanks to Andrey Chorniy:
-https://achorniy.wordpress.com/2013/05/27/tinymce-4-spellchecker-integration
-https://achorniy.wordpress.com/2009/08/11/tinymce-spellchecker-in-java/
-http://sourceforge.net/projects/jspellchecker/
+* https://achorniy.wordpress.com/2013/05/27/tinymce-4-spellchecker-integration
+* https://achorniy.wordpress.com/2009/08/11/tinymce-spellchecker-in-java/
+* http://sourceforge.net/projects/jspellchecker/
 
 Changes summary:
 * 03/09/2015 - forked from Andrey's repo (http://sourceforge.net/p/jspellchecker/code/HEAD/tree/branches/v1/)

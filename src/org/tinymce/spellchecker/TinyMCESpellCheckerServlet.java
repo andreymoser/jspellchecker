@@ -256,6 +256,7 @@ public abstract class TinyMCESpellCheckerServlet extends HttpServlet {
                     result.put(invalidWord, findSuggestions(invalidWord, lang, maxSuggestionsCount));
             } catch (JSONException e) {
                 e.printStackTrace();
+                throw new SpellCheckException("spellcheck method exception: " + e.getMessage(), e);
             }
         }
         return result;
@@ -267,14 +268,8 @@ public abstract class TinyMCESpellCheckerServlet extends HttpServlet {
             JSONArray checkedWords = params.optJSONArray(1);
             String lang = params.optString(0);
             lang = ("".equals(lang)) ? DEFAULT_LANGUAGE : lang;
-
-            List<String> misspelledWordsList = findMisspelledWords(new JsonArrayIterator(checkedWords), lang);
-
-
-            for (String misspelledWord : misspelledWordsList) {
+            for (String misspelledWord : findMisspelledWords(new JsonArrayIterator(checkedWords), lang))
                 misspelledWords.put(misspelledWord);
-            }
-
         }
         return misspelledWords;
     }
@@ -285,18 +280,14 @@ public abstract class TinyMCESpellCheckerServlet extends HttpServlet {
             String lang = params.optString(0);
             lang = ("".equals(lang)) ? DEFAULT_LANGUAGE : lang;
             String word = params.optString(1);
-            List<String> suggestionsList = findSuggestions(word, lang, maxSuggestionsCount);
-            for (String suggestion : suggestionsList) {
+            for (String suggestion : findSuggestions(word, lang, maxSuggestionsCount))
                 suggestions.put(suggestion);
-            }
         }
         return suggestions;
     }
 
-
     protected abstract List<String> findMisspelledWords(Iterator<String> checkedWordsIterator,
                                                         String lang) throws SpellCheckException;
-
 
     protected abstract List<String> findSuggestions(String word, String lang,
                                                     int maxSuggestionsCount) throws SpellCheckException;

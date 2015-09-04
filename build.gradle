@@ -1,0 +1,53 @@
+import java.text.SimpleDateFormat
+
+apply plugin: 'java'
+apply plugin: 'war'
+
+def tinymceVersion = '4.2.5'
+def javaVersion = "1.8"
+def version = tinymceVersion + "-" + new SimpleDateFormat("yyyy-MM-dd").format(new Date())
+def warVersion = version + "-" + javaVersion
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile fileTree("web/WEB-INF/lib")
+    compile fileTree('dev-lib')
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src"]
+        }
+    }
+}
+
+war {
+    webInf {
+        from 'web/WEB-INF'
+    }
+    manifest {
+        attributes 'version': warVersion
+        attributes 'java': javaVersion
+        attributes 'tinymce': tinymceVersion
+        attributes 'releases': 'https://github.com/andreymoser/jspellchecker/tree/master/releases'
+        attributes 'license': 'GNU GENERAL PUBLIC LICENSE - Version 2, June 1991'
+    }
+}
+
+task publishSrcRelease(type: Zip) {
+    from ('.')
+    include (['src/**/*.*','web/WEB-INF/*.*','web/*.*','LICENSE','README.md'])
+    destinationDir file('releases/repository')
+    archiveName (version + '-src.zip')
+}
+
+task publishWarRelease(type: Zip) {
+    from ('.')
+    include (['build/libs/jspellchecker.war','LICENSE','README.md'])
+    destinationDir file('releases/repository')
+    archiveName (warVersion + '-war.zip')
+}

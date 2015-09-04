@@ -26,9 +26,7 @@ sourceSets {
 }
 
 war {
-    webInf {
-        from 'web/WEB-INF'
-    }
+    from fileTree('web')
     manifest {
         attributes 'version': warVersion
         attributes 'java': javaVersion
@@ -45,9 +43,11 @@ task publishSrcRelease(type: Zip) {
     archiveName (version + '-src.zip')
 }
 
-task publishWarRelease(type: Zip) {
+task publishWarRelease(type: Zip, dependsOn: ['war']) {
     from ('.')
     include (['build/libs/jspellchecker.war','LICENSE','README.md'])
     destinationDir file('releases/repository')
     archiveName (warVersion + '-war.zip')
 }
+
+task publish(dependsOn: ['publishSrcRelease', 'publishWarRelease']) { }

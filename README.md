@@ -50,9 +50,9 @@ About the dictionaries:
 * Dictionaries aren't included. You'll need to configure them. I recommend to read Chorniy's blog mentioned below.
 
 Notes:
-* In case you app server is incompatible, It's possible to build/create war using current gradle build. It depends on current dependencies and it haven't been analyzed and tested. Basically you need to clone this repository form grit and execute 'gradle war' using the proper JDK version.
+* In case your app server is incompatible you can build the deployable war file via gradle. It depends on current dependencies and it haven't been analyzed and tested. Basically you need to clone this repository form git, then execute 'gradle war' using the desired JDK version.
  
 Special thanks to Andrey Chorniy:
 * https://achorniy.wordpress.com/2013/05/27/tinymce-4-spellchecker-integration
-* https://achorniy.wordpress.com/2009/08/11/tinymce-spellchecker-in-java/
-* http://sourceforge.net/projects/jspellchecker/
+* https://achorniy.wordpress.com/2009/08/11/tinymce-spellchecker-in-java
+* http://sourceforge.net/projects/jspellchecker

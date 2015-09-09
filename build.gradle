@@ -40,14 +40,14 @@ task publishSrcRelease(type: Zip) {
     from ('.')
     include (['src/**/*.*','web/WEB-INF/*.*','web/*.*','LICENSE','README.md'])
     destinationDir file('releases/repository')
-    archiveName (version + '-src.zip')
+    archiveName ('jspellchecker-' + version + '-src.zip')
 }
 
 task publishWarRelease(type: Zip, dependsOn: ['war']) {
     from ('.')
     include (['build/libs/jspellchecker.war','LICENSE','README.md'])
     destinationDir file('releases/repository')
-    archiveName (warVersion + '-war.zip')
+    archiveName ('jspellchecker-' + warVersion + '-war.zip')
 }
 
 task publish(dependsOn: ['publishSrcRelease', 'publishWarRelease']) { }

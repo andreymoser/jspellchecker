@@ -11,7 +11,18 @@ Tinymce spellchecker configuration:
 * http://www.tinymce.com/wiki.php/Configuration:spellchecker_callback
 * http://www.tinymce.com/wiki.php/Plugin:spellchecker
 
-Example:
+HTTP post example:
+```
+tinymce.init({
+    selector: "textarea",
+    plugins: "spellchecker",
+    spellchecker_languages : "+English=en-us",
+    spellchecker_rpc_url: "http://localhost:8080/jspellchecker/jazzy-spellchecker",
+    toolbar: "spellchecker"
+})
+```
+
+AJAX example:
 ```
 tinymce.init({
     selector: "textarea",
@@ -40,8 +51,9 @@ tinymce.init({
 
 Changes summary:
 * 03/09/2015 - forked from Andrey's repo (http://sourceforge.net/p/jspellchecker/code/HEAD/tree/branches/v1/)
-* 03/09/2015 - added spellcheck method as required for tinymce 4.2.5 (needs to mimic JSON as example above)
+* 03/09/2015 - added spellcheck method as required for tinymce 4.2.5 (needs to mimic JSON as example above using AJAX wrapper)
 * 04/09/2015 - published war to download and added requirements
+* 10/09/2015 - added support for application/x-www-form-urlencoded content-type (tinymce 4.2.x HTTP post)
 
 Application servers tested:
 * Apache tomcat 7

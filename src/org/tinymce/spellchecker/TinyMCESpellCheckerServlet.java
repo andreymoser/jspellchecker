@@ -36,10 +36,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author: Andrey Chorniy
@@ -167,7 +170,11 @@ public abstract class TinyMCESpellCheckerServlet extends HttpServlet {
             JSONObject jsonOutput = new JSONObject("{'id':null,'result':[],'error':null}");
             switch (methods.valueOf(methodName.trim())) {
                 case spellcheck:
-                    jsonOutput.put("result", spellcheck(jsonInput.optJSONObject("params")));
+                    if (request.getHeader("content-type").equals("application/x-www-form-urlencoded")) {
+                        jsonOutput = new JSONObject("{\"words\": {} }");
+                        jsonOutput.put("words", spellcheck(jsonInput.optJSONObject("params")));
+                    } else
+                        jsonOutput.put("result", spellcheck(jsonInput.optJSONObject("params")));
                     break;
                 case checkWords:
                     jsonOutput.put("result", checkWords(jsonInput.optJSONArray("params")));
@@ -201,6 +208,8 @@ public abstract class TinyMCESpellCheckerServlet extends HttpServlet {
             throw new SpellCheckException("Could not interpret JSON request body", e);
         } catch (IOException e) {
             throw new SpellCheckException("Error reading request body", e);
+        } catch (SpellCheckException e) {
+            throw e;
         }
         return jsonInput;
     }
@@ -222,14 +231,49 @@ public abstract class TinyMCESpellCheckerServlet extends HttpServlet {
      * @return read the request content and return it as String object
      * @throws IOException
      */
-    private String getRequestBody(HttpServletRequest request) throws IOException {
+    private String getRequestBody(HttpServletRequest request) throws IOException, SpellCheckException {
+        if (request.getHeader("content-type") == null)
+            throw new SpellCheckException("Invalid content-type: not defined (null)");
+
         StringBuilder sb = new StringBuilder();
-        String line = request.getReader().readLine();
-        while (null != line) {
-            sb.append(line);
-            line = request.getReader().readLine();
+        if (request.getHeader("content-type").equals("application/x-www-form-urlencoded")) {
+            if (request.getParameter("method") == null)
+                throw new SpellCheckException("Invalid method: not defined (null)");
+            if (!request.getParameter("method").equals("spellcheck"))
+                throw new SpellCheckException("Invalid method: use spellcheck method instead.");
+            sb.append("{\"method\": \"spellcheck\", ");
+            sb.append("\"params\": { ");
+            sb.append("\"lang\": \"" + request.getParameter("lang") + "\", ");
+            sb.append("\"words\": [");
+            String sep = "";
+            for (String word : getWords(request.getParameter("text"))) {
+                sb.append(sep + "\"" + word.replaceAll("\\n","") + "\"");
+                sep = ",";
+            }
+            sb.append("]}}");
+        } else if (request.getHeader("content-type").equals("application/json")) {
+            String line = request.getReader().readLine();
+            while (null != line) {
+                sb.append(line);
+                line = request.getReader().readLine();
+            }
+        } else {
+            throw new SpellCheckException("Invalid content-type " + request.getHeader("content-type")
+                    + ". Expected values are 'application/x-www-form-urlencoded' or 'application/json'");
         }
         return sb.toString();
+    }
+
+    public List<String> getWords(String text) {
+        List<String> words = new ArrayList<String>();
+        Matcher matcher = Pattern.compile("[^\\W]+").matcher(text);
+        while(matcher.find()) {
+            String word = matcher.group();
+            if (!Pattern.compile("^[0-9]+$").matcher(word).find() &&
+                    !Pattern.compile("^[0-9]+[0-9](th)$").matcher(word).find())
+                words.add(word);
+        }
+        return words;
     }
 
     /**
